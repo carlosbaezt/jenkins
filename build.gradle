@@ -31,3 +31,16 @@ dependencies {
 	runtimeOnly('com.h2database:h2')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
+
+test 
+{
+	// systemProperties 'property': 'value'
+	jacoco 
+	{
+		append = false
+		destinationFile = file("jacoco/jacocoTest.exec")
+	}
+	reports.junitXml.destination = file ("jacoco/test-results")
+}
+
+jacocoTestReport.dependsOn(test)
