@@ -30,13 +30,7 @@ pipeline {
 		stage('Clean') {
 			steps{
 				echo "------------>Clean<------------"
-				if(isUnix())
-				{
-					sh 'gradle clean'
-				}
-				else{
-					bat 'gradle.bat clean'
-				}				
+				bat 'gradlew.bat clean'	
 			}
 		}
 		
