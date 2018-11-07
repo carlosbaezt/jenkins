@@ -23,13 +23,6 @@ pipeline {
 			steps{
 				echo "------------>Checkout<------------"
 				checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [] , gitTool: 'GIT', submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'carlosbaezt', url: 'https://github.com/carlosbaezt/jenkins']]])
-				sh 'gradle clean'
-			}
-		}
-
-		stage('Clean') {
-			steps{
-				echo "------------>Clean<------------"
 				bat 'gradlew.bat clean'	
 			}
 		}
@@ -37,14 +30,14 @@ pipeline {
 		stage('Compile') {
 			steps{
 				echo "------------>Compile<------------"
-				sh 'gradle --b ./build.gradle compileJava'
+				bat 'gradlew.bat --b ./build.gradle compileJava'
 			}
 		}
 		
 		stage('Unit Tests') {
 			steps{
 				echo "------------>Unit Tests<------------"
-				sh 'gradle test --stacktrace --debug'
+				bat 'gradlew.bat test --stacktrace --debug'
 				junit '**/build/test-results/test/*.xml' //aggregate test results - JUnit
 			}
 		}
@@ -53,7 +46,7 @@ pipeline {
 			steps{
 				echo '------------>Análisis de código estático<------------'
 				withSonarQubeEnv('Sonar') {
-					sh "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"
+					bat "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"
 				}
 			}
 		}
@@ -61,7 +54,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo "------------>Build<------------"
-				sh 'gradle build -x test'
+				bat 'gradlew.bat build -x test'
 			}
 		}
 	}
