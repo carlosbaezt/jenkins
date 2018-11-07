@@ -11,7 +11,7 @@ pipeline {
 	
 	//A section defining tools to auto-install and put on the PATH
 	tools {
-		jdk 'JDK8_Centos'
+		jdk 'JDK_8'
 		gradle 'Gradle'
 	}
 	
@@ -23,7 +23,7 @@ pipeline {
 		stage('Checkout') {
 			steps{
 				echo "------------>Checkout<------------"
-				checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [] , gitTool: '', submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'carlosbaezt', url: 'https://github.com/carlosbaezt/jenkins']]])
+				checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [] , gitTool: 'GIT', submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'carlosbaezt', url: 'https://github.com/carlosbaezt/jenkins']]])
 				sh 'gradle clean'
 			}
 		}
