@@ -1,4 +1,7 @@
-pipeline {	
+pipeline {
+	//where and how to execute the Pipeline
+	agent any
+	
 	options {
 		buildDiscarder(logRotator(numToKeepStr: '5')) 
 		disableConcurrentBuilds() 
