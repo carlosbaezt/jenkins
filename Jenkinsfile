@@ -45,8 +45,8 @@ pipeline {
 		stage('Static Code Analysis') {
 			steps{
 				echo '------------>Análisis de código estático<------------'
-				withSonarQubeEnv('Sonar') {
-					bat "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"
+				withSonarQubeEnv('SonarQube') {
+					bat "gradlew.bat sonarqube -Dsonar.projectKey=carlosbaezt_jenkins -Dsonar.organization=carlosbaezt-github  -Dsonar.host.url=https://sonarcloud.io   -Dsonar.login=a2de6572f1da8f3aa548373fc4d5e3c3a78f01f6"
 				}
 			}
 		}
