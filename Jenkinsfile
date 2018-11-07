@@ -18,15 +18,56 @@ pipeline {
 	}
 	
 	stages{		
-		stage('Checkout') {
+		stage('Checkout')
+		{
 			steps{
 				echo "------------>Checkout<------------"
 				checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [] , gitTool: 'GIT', submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'carlosbaezt', url: 'https://github.com/carlosbaezt/jenkins']]])
-				if (isUnix()) {
+				sh 'gradle clean'
+			}
+		}
+
+		stage('Clean') {
+			steps{
+				echo "------------>Clean<------------"
+				if(isUnix())
+				{
 					sh 'gradle clean'
-				} else {
-					bat 'gradlew.bat clean build'
 				}
+				else{
+					bat 'gradle.bat clean'
+				}				
+			}
+		}
+		
+		stage('Compile') {
+			steps{
+				echo "------------>Compile<------------"
+				sh 'gradle --b ./build.gradle compileJava'
+			}
+		}
+		
+		stage('Unit Tests') {
+			steps{
+				echo "------------>Unit Tests<------------"
+				sh 'gradle test --stacktrace --debug'
+				junit '**/build/test-results/test/*.xml' //aggregate test results - JUnit
+			}
+		}
+		
+		stage('Static Code Analysis') {
+			steps{
+				echo '------------>Análisis de código estático<------------'
+				withSonarQubeEnv('Sonar') {
+					sh "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner"
+				}
+			}
+		}
+		
+		stage('Build') {
+			steps {
+				echo "------------>Build<------------"
+				sh 'gradle build -x test'
 			}
 		}
 	}
