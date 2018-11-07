@@ -1,9 +1,4 @@
-pipeline {
-	//where and how to execute the Pipeline
-	agent {
-		label 'Slave_Induccion'
-	}
-	
+pipeline {	
 	options {
 		buildDiscarder(logRotator(numToKeepStr: '5')) 
 		disableConcurrentBuilds() 
